@@ -1,6 +1,7 @@
 package com.learn.photo
 
 import android.net.Uri
+import androidx.fragment.app.FragmentActivity
 
 /**
  *
@@ -9,11 +10,20 @@ import android.net.Uri
  * @desc
  */
 class TakePhotoCall(
-    private val takePhotoBuilder: TakePhotoBuilder,
-    private val fragment: PhotoFragment
+    private val takePhotoBuilder: TakePhotoBuilder, private val activity: FragmentActivity
 ) {
+    private val default = "DEFAULT"
 
     fun apply(block: (Uri?, List<Uri>?) -> Unit) {
-        fragment.apply(takePhotoBuilder,block)
+        var photoFragment: PhotoFragment? = null
+        if (activity.supportFragmentManager.findFragmentByTag(default) != null) {
+            photoFragment =
+                activity.supportFragmentManager.findFragmentByTag(default) as PhotoFragment
+        } else {
+            photoFragment = PhotoFragment.newInstance()
+            activity.supportFragmentManager.beginTransaction()
+                .add(photoFragment, default).commitNow()
+        }
+        photoFragment.apply(takePhotoBuilder, block)
     }
 }

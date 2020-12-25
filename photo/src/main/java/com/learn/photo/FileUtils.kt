@@ -16,7 +16,7 @@ class FileUtils {
         private val fileRootPath = File.separator + "img"
 
         private fun getPhotoPath(context: Context): String {
-            return context.filesDir.absolutePath + fileRootPath + SimpleDateFormat.getDateInstance() + ".dpg"
+            return context.filesDir.absolutePath + fileRootPath + File.separator + SimpleDateFormat.getDateInstance() + ".jpg"
         }
 
         fun getPhotoFile(context: Context) =

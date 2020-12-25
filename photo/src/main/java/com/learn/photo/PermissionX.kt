@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
 /**
@@ -15,21 +16,16 @@ import androidx.fragment.app.FragmentActivity
 class PermissionX {
     companion object {
         private const val permission = android.Manifest.permission.CAMERA
-        fun hasPermission(context: Context): Boolean {
+        fun hasPermission(context: Fragment): Boolean {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 return true
             }
-            return ActivityCompat.checkSelfPermission(
-                context,
-                permission
-            ) == PackageManager.PERMISSION_GRANTED
+            return context.shouldShowRequestPermissionRationale(permission)
+
         }
 
-        fun requestPermission(fragmentActivity: FragmentActivity, code: Int) {
-            ActivityCompat.requestPermissions(
-                fragmentActivity,
-                arrayOf(permission), code
-            )
+        fun requestPermission(fragment: Fragment, code: Int) {
+            fragment.requestPermissions(arrayOf(permission),code)
         }
     }
 }

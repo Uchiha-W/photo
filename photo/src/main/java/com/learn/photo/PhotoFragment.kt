@@ -4,6 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
 /**
@@ -23,19 +27,21 @@ class PhotoFragment : Fragment() {
         fun newInstance() = PhotoFragment()
     }
 
-
     fun apply(takePhotoBuilder: TakePhotoBuilder, onCallBack: (Uri?, List<Uri>?) -> Unit) {
         this.takePhotoBuilder = takePhotoBuilder
         this.onCallBack = onCallBack
-        requestCameraPermission { takePhotoBuilder.permissionFailure?.invoke() }
+
+        requestCameraPermission {
+            takePhotoBuilder.permissionFailure?.invoke()
+        }
     }
 
     private fun requestCameraPermission(permissionFailure: () -> Unit) {
         this.onPermissionFailure = permissionFailure
-        if (PermissionX.hasPermission(activity!!)) {
+        if (PermissionX.hasPermission(this)) {
             apply()
         } else {
-            PermissionX.requestPermission(activity!!, cameraCode)
+            PermissionX.requestPermission(this, cameraCode)
         }
     }
 
@@ -53,7 +59,7 @@ class PhotoFragment : Fragment() {
             if (it.isDestroyed) {
                 return
             }
-            if (PermissionX.hasPermission(it)) {
+            if (PermissionX.hasPermission(this)) {
                 val file = FileUtils.getPhotoFile(it)
                 takePhotoUri = UriUtils.file2Path(file, it)
                 IntentUtil.takePhoto(this, takePhotoUri)
