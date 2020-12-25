@@ -38,10 +38,10 @@ class PhotoFragment : Fragment() {
 
     private fun requestCameraPermission(permissionFailure: () -> Unit) {
         this.onPermissionFailure = permissionFailure
-        if (PermissionX.hasPermission(this)) {
+        if (PermissionX.hasPermission(requireActivity())) {
             apply()
         } else {
-            PermissionX.requestPermission(this, cameraCode)
+            PermissionX.requestPermission(requireActivity(), cameraCode)
         }
     }
 
@@ -59,7 +59,7 @@ class PhotoFragment : Fragment() {
             if (it.isDestroyed) {
                 return
             }
-            if (PermissionX.hasPermission(this)) {
+            if (PermissionX.hasPermission(requireContext())) {
                 val file = FileUtils.getPhotoFile(it)
                 takePhotoUri = UriUtils.file2Path(file, it)
                 IntentUtil.takePhoto(this, takePhotoUri)
